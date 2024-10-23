@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rule Engine</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <h1>Rule Engine </h1>
+
+    <h2>Create Rule</h2>
+    <input type="text" id="rule-name" placeholder="Enter rule name">
+    <input type="text" id="rule-input" placeholder="Enter rule (e.g. age > 30 AND salary > 20000)">
+    <button onclick="createRule()">Create Rule</button>
+    <p id="create-rule-result"></p>
+
+    <h2>View Rules</h2>
+    <button onclick="viewRules()">View All Rules</button>
+    <ul id="rules-list"></ul>
+
+    <h2>Combine Rules</h2>
+    <input type="number" id="rule1-id" placeholder="First rule ID">
+    <input type="number" id="rule2-id" placeholder="Second rule ID">
+    <input type="text" id="combined-rule-name" placeholder="Combined rule name">
+    <button onclick="combineRules()">Combine Rules</button>
+    <p id="combine-rule-result"></p>
+
+    <h2>Evaluate Rule</h2>
+    <input type="number" id="evaluate-rule-id" placeholder="Rule ID">
+    <textarea id="evaluate-data" placeholder='{"age": 35, "salary": 60000}'></textarea>
+    <button onclick="evaluateRule()">Evaluate Rule</button>
+    <p id="evaluate-rule-result"></p>
+
+    <script>
+        function createRule() {
+            const rule = document.getElementById('rule-input').value;
+            const name = document.getElementById('rule-name').value;
+            fetch('/api/create_rule', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ rule, name })
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('create-rule-result').innerText = `Created rule with ID: ${data.rule_id} and Name: ${data.name}`;
+            });
+        }
+
+        function viewRules() {
+            fetch('/api/view_rules')
+            .then(response => response.json())
+            .then(data => {
+                const rulesList = document.getElementById('rules-list');
+                rulesList.innerHTML = '';
+                data.forEach(rule => {
+                    const li = document.createElement('li');
+                    li.textContent = `ID: ${rule[0]}, Name: ${rule[1]}, Rule: ${rule[2]}`;
+                    rulesList.appendChild(li);
+                });
+            });
+        }
+
+        function combineRules() {
+            const rule1Id = document.getElementById('rule1-id').value;
+            const rule2Id = document.getElementById('rule2-id').value;
+            const combinedName = document.getElementById('combined-rule-name').value;
+
+            fetch('/api/combine_rules', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ rule_ids: [rule1Id, rule2Id], names: combinedName })
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('combine-rule-result').innerText = `Combined rule with ID: ${data.combined_rule_id} and Name: ${data.names}`;
+            });
+        }
+
+        function evaluateRule() {
+            const ruleId = document.getElementById('evaluate-rule-id').value;
+            const data = JSON.parse(document.getElementById('evaluate-data').value);
+            fetch('/api/evaluate_rule', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ rule_id: ruleId, data })
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('evaluate-rule-result').innerText = `Evaluation result: ${data.result}`;
+            });
+        }
+    </script>
+</body>
+</html>
