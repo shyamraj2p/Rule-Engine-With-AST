@@ -16,7 +16,7 @@ Added view all rules which return all the rules which are created with id and na
 # Local Setup (Without Docker)
 # 1.Clone the Repository:
 
-git clone [https://github.com/shyamraj2p/flask-rule-engine.git](https://github.com/shyamraj2p/Rule-Engine-With-AST.git)
+git clone (https://github.com/shyamraj2p/Rule-Engine-With-AST.git)
 
 cd Rule-Engine-With-AST
 # 2.Install Python Dependencies:
