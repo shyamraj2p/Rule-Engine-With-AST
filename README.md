@@ -34,9 +34,9 @@ http://127.0.0.1:5000/
 # Docker Setup
 1)You can also run the application using Docker. Here's how:
 
-2)Build the Docker Image:- docker build -t flask-rule-engine .
+2)Build the Docker Image:- docker build -t Rule-Engine-With-AST .
 
-3)Run the Docker Container:- docker run -p 5000:5000 flask-rule-engine
+3)Run the Docker Container:- docker run -p 5000:5000 Rule-Engine-With-AST
 
 4)Access the Application:
 
